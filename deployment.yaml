@@ -1,34 +1,1 @@
-kind: Service
-apiVersion: v1
-metadata:
-  name: docker-demo-service
-spec:
-  selector:
-    app: docker-demo
-  type: NodePort
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: docker-demo-deployment
-  labels:
-    app: docker-demo
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: docker-demo
-  template:
-    metadata:
-      labels:
-        app: docker-demo
-    spec:
-      imagePullSecrets:
-        - name: docker-demo
-          images: ${CICD_IMAGE}:${CICD_EXECUTION_SEQUENCE}
-          ports:
-            - containerPort: 8080
+kind: ServiceapiVersion: v1metadata:  name: docker-demo-servicespec:  selector:    app: docker-demo  type: NodePort  ports:    - protocol: TCP      port: 8080      targetPort: 8080---apiVersion: apps/v1kind: Deploymentmetadata:  name: docker-demo-deployment  labels:    app: docker-demospec:  replicas: 1  selector:    matchLabels:      app: docker-demo  template:    metadata:      labels:        app: docker-demo    spec:      imagePullSecrets:        - name: docker-demo          images: ${CICD_IMAGE}:${CICD_EXECUTION_SEQUENCE}          ports:            - containerPort: 8080
