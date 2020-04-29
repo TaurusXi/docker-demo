@@ -1,0 +1,21 @@
+stages:
+  - name: Build
+    steps:
+      - runScriptConfig:
+          images: maven:3.6.3-jdk-8
+          shellScript: |-
+            mkdir -p /java/src/github.com/rancher
+            ln -s `pwd` /java/src/github.com/rancher/docker-demo
+            cd /java/src/github.com/rancher/docker-demo
+            mvn clean install
+            mvn package
+  - name: Publish
+    steps:
+      - publishImageConfig:
+          dockerfilePath: ./Dockerfile
+          buildContext: .
+          tag: dockerdemo:${CICD_EXECUTION_SEQUENCE}
+  - name: Deploy
+    steps:
+      - applyYamlConfig:
+          path: ./deployment.yaml
